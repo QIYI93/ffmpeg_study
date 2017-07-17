@@ -3,18 +3,17 @@
 
 #include <windows.h>
 
-std::string getFullPath(std::string file)
+using std::string;
+string getFullPath(string file)
 {
     char path[MAX_PATH];
     GetModuleFileName(NULL, path, MAX_PATH);
-    std::string fullPath(path);
+    string fullPath(path);
     size_t index = fullPath.find("ffmpeg_study");
     fullPath.erase(fullPath.begin() + index + 13, fullPath.end());
     fullPath.append("resource\\");
     fullPath.append(file);
-    return std::string(fullPath);
+    return fullPath;
 }
-
-
 
 #endif

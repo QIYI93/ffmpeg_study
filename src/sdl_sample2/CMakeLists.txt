@@ -35,6 +35,10 @@ add_custom_command(TARGET sdl_sample2 POST_BUILD COMMAND ${CMAKE_COMMAND} -E cop
 add_custom_command(TARGET sdl_sample2 POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different "${SDL2_image}/lib/x86/SDL2_image.dll" ${CMAKE_BINARY_DIR}/rundir/Debug)
 endif()
 
+if(MSVC)
+set_target_properties(sdl_sample2 PROPERTIES LINK_FLAGS_DEBUG "/SUBSYSTEM:CONSOLE")
+endif()
+
 set(EXECUTABLE_OUTPUT_PATH "${CMAKE_BINARY_DIR}/rundir")
 #target_link_libraries()
 assign_source_group(${util})

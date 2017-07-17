@@ -36,6 +36,10 @@ endif()
 set(EXECUTABLE_OUTPUT_PATH "${CMAKE_BINARY_DIR}/rundir")
 assign_source_group(${util})
 
+if(MSVC)
+set_target_properties(simplest_player PROPERTIES LINK_FLAGS_DEBUG "/SUBSYSTEM:CONSOLE")
+endif()
+
 # Copy DLLs to the output directory on Windows
 if(WIN32)
 add_custom_command(TARGET simplest_player POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different "${SDL2}/lib/x86/SDL2.dll" ${CMAKE_BINARY_DIR}/rundir/Debug)

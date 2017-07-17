@@ -2,37 +2,17 @@
 #include <string>
 #include <iostream>
 
-#include "SDL.h"
-#include "SDL_image.h"
-
 #include <filehelper.h>
+#define SDL_image
+#include <sdlhelper.h>
 
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
 
-SDL_Window *window = nullptr;
-SDL_Renderer *renderer = nullptr;
-
-SDL_Texture* LoadImage(std::string file) {
-    SDL_Texture* tex = nullptr;
-    tex = IMG_LoadTexture(renderer, file.c_str());
-    if (tex == nullptr)
-        throw std::runtime_error("Failed to load image: " + file + IMG_GetError());
-    return tex;
-}
-
-void ApplySurface(int x, int y, SDL_Texture *tex, SDL_Renderer *rend)
-{
-    SDL_Rect pos;
-    pos.x = x;
-    pos.y = y;
-    SDL_QueryTexture(tex, NULL, NULL, &pos.w, &pos.h);
-
-    SDL_RenderCopy(rend, tex, NULL, &pos);
-}
-
 int main(int argc, char** argv)
 {
+    SDL_Window *window = nullptr;
+    SDL_Renderer *renderer = nullptr;
 
     if (SDL_Init(SDL_INIT_EVERYTHING) == -1)
     {
@@ -59,8 +39,8 @@ int main(int argc, char** argv)
     SDL_Texture *background = nullptr, *image = nullptr;
     try
     {
-        background = LoadImage(getFullPath("guest.bmp"));
-        image = LoadImage(getFullPath("SakuraSmall2.bmp"));
+        background = LoadImage(getFullPath("guest.bmp"), renderer);
+        image = LoadImage(getFullPath("SakuraSmall2.bmp"), renderer);
     }
     catch (const std::runtime_error &e) {
         std::cout << e.what() << std::endl;

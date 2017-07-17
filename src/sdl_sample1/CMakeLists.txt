@@ -16,7 +16,6 @@ include_directories(${SDL2}/include)
 
 link_directories(${SDL2}/lib/x86)
 
-
 add_executable(sdl_sample1 WIN32
 	${SOURCES}
 	${util})
@@ -29,6 +28,11 @@ endif()
 # Copy DLLs to the output directory on Windows
 if(WIN32)
 add_custom_command(TARGET sdl_sample1 POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different "${SDL2}/lib/x86/SDL2.dll" ${CMAKE_BINARY_DIR}/rundir/Debug)
+endif()
+
+if(MSVC)
+set_target_properties(sdl_sample1 PROPERTIES LINK_FLAGS_DEBUG "/SUBSYSTEM:CONSOLE")
+#set_target_properties(sdl_sample1 PROPERTIES COMPILE_DEFINITIONS_DEBUG "_CONSOLE")
 endif()
 
 set(EXECUTABLE_OUTPUT_PATH "${CMAKE_BINARY_DIR}/rundir")

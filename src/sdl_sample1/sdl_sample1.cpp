@@ -1,43 +1,16 @@
 #include <string>
 #include <iostream>
 
-#include <SDL.h>
-
 #include <filehelper.h>
+#include <sdlhelper.h>
 
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
 
-SDL_Window *window = nullptr;
-SDL_Renderer *renderer = nullptr;
-
-SDL_Texture* LoadImage(std::string file)
-{
-    SDL_Surface *loadedImage = nullptr;
-    SDL_Texture *texture = nullptr;
-
-    loadedImage = SDL_LoadBMP(file.c_str());
-    if (loadedImage != nullptr) {
-        texture = SDL_CreateTextureFromSurface(renderer, loadedImage);
-        SDL_FreeSurface(loadedImage);
-    }
-    else
-        std::cout << SDL_GetError() << std::endl;
-    return texture;
-}
-
-void ApplySurface(int x, int y, SDL_Texture *tex, SDL_Renderer *rend)
-{
-    SDL_Rect pos;
-    pos.x = x;
-    pos.y = y;
-    SDL_QueryTexture(tex, NULL, NULL, &pos.w, &pos.h);
-
-    SDL_RenderCopy(rend, tex, NULL, &pos);
-}
-
 int main(int argc, char** argv)
 {
+    SDL_Window *window = nullptr;
+    SDL_Renderer *renderer = nullptr;
 
     if (SDL_Init(SDL_INIT_EVERYTHING) == -1)
     {
@@ -62,8 +35,8 @@ int main(int argc, char** argv)
     }
 
     SDL_Texture *background = nullptr, *image = nullptr;
-    background = LoadImage(getFullPath("guest.bmp"));
-    image = LoadImage(getFullPath("SakuraSmall2.bmp"));
+    background = LoadImageWithBMPFormat(getFullPath("guest.bmp"), renderer);
+    image = LoadImageWithBMPFormat(getFullPath("SakuraSmall2.bmp"), renderer);
     if (background == nullptr || image == nullptr)
         return 4;
 
