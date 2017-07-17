@@ -39,8 +39,8 @@ int main(int argc, char** argv)
     SDL_Texture *background = nullptr, *image = nullptr;
     try
     {
-        background = LoadImage(getFullPath("guest.bmp"), renderer);
-        image = LoadImage(getFullPath("SakuraSmall2.bmp"), renderer);
+        background = SDL_helper::LoadImage(getFullPath("guest.bmp"), renderer);
+        image = SDL_helper::LoadImage(getFullPath("image_1.bmp"), renderer);
     }
     catch (const std::runtime_error &e) {
         std::cout << e.what() << std::endl;
@@ -48,25 +48,35 @@ int main(int argc, char** argv)
     }
 
     SDL_RenderClear(renderer);
-
     int bW, bH;
     SDL_QueryTexture(background, NULL, NULL, &bW, &bH);
-    ApplySurface(0, 0, background, renderer);
+    SDL_helper::ApplySurface(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, background, renderer);
 
     int iW, iH;
     SDL_QueryTexture(image, NULL, NULL, &iW, &iH);
     int x = SCREEN_WIDTH / 2 - iW / 2;
     int y = SCREEN_HEIGHT / 2 - iH / 2;
-    ApplySurface(x, y, image, renderer);
 
-    SDL_RenderPresent(renderer);
-    SDL_Delay(2000);
+    //Our event structure
+    SDL_Event e;
+    bool quit = false;
+    while (!quit) {
+        while (SDL_PollEvent(&e)) {
+            if (e.type == SDL_QUIT) {
+                quit = true;
+            }
+            if (e.type == SDL_KEYDOWN) {
+                quit = true;
+            }
+            if (e.type == SDL_MOUSEBUTTONDOWN) {
+                quit = true;
+            }
+        }
+        SDL_helper::ApplySurface(x, y, iW, iH, image, renderer);
+        SDL_RenderPresent(renderer);
+    }
 
-    SDL_DestroyTexture(background);
-    SDL_DestroyTexture(image);
-    SDL_DestroyRenderer(renderer);
-    SDL_DestroyWindow(window);
-
+    SDL_helper::cleanup(image, background, renderer, window);
     SDL_Quit();
 
     return 0;

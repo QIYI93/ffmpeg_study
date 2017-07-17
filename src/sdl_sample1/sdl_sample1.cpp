@@ -35,8 +35,8 @@ int main(int argc, char** argv)
     }
 
     SDL_Texture *background = nullptr, *image = nullptr;
-    background = LoadImageWithBMPFormat(getFullPath("guest.bmp"), renderer);
-    image = LoadImageWithBMPFormat(getFullPath("SakuraSmall2.bmp"), renderer);
+    background = SDL_helper::LoadImageWithBMPFormat(getFullPath("guest.bmp"), renderer);
+    image = SDL_helper::LoadImageWithBMPFormat(getFullPath("image_1.bmp"), renderer);
     if (background == nullptr || image == nullptr)
         return 4;
 
@@ -44,13 +44,13 @@ int main(int argc, char** argv)
 
     int bW, bH;
     SDL_QueryTexture(background, NULL, NULL, &bW, &bH);
-    ApplySurface(0, 0, background, renderer);
+    SDL_helper::ApplySurface(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, background, renderer);
 
     int iW, iH;
     SDL_QueryTexture(image, NULL, NULL, &iW, &iH);
     int x = SCREEN_WIDTH / 2 - iW / 2;
     int y = SCREEN_HEIGHT / 2 - iH / 2;
-    ApplySurface(x, y, image, renderer);
+    SDL_helper::ApplySurface(x, y, iW, iH, image, renderer);
 
     SDL_RenderPresent(renderer);
     SDL_Delay(2000);
