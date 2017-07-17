@@ -23,9 +23,17 @@ add_executable(sdl_sample2 WIN32
 	${SOURCES}
 	${util})
 
+if(WIN32)
 target_link_libraries(sdl_sample2 SDL2.lib)
 target_link_libraries(sdl_sample2 SDL2main.lib)
 target_link_libraries(sdl_sample2 SDL2_image.lib)
+endif()
+
+# Copy DLLs to the output directory on Windows
+if(WIN32)
+add_custom_command(TARGET sdl_sample2 POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different "${SDL2}/lib/x86/SDL2.dll" ${CMAKE_BINARY_DIR}/rundir/Debug)
+add_custom_command(TARGET sdl_sample2 POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different "${SDL2_image}/lib/x86/SDL2_image.dll" ${CMAKE_BINARY_DIR}/rundir/Debug)
+endif()
 
 set(EXECUTABLE_OUTPUT_PATH "${CMAKE_BINARY_DIR}/rundir")
 #target_link_libraries()
