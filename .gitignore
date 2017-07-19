@@ -41,6 +41,7 @@ depcomp
 install-sh
 Makefile.in
 Makefile
+CMakeLists.txt
 
 #random useless file stuff
 *.dmg
