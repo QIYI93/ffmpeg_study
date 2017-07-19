@@ -35,8 +35,8 @@ int main(int argc, char** argv)
     }
 
     SDL_Texture *background = nullptr, *image = nullptr;
-    background = SDL_helper::LoadImageWithBMPFormat(getFullPath("guest.bmp"), renderer);
-    image = SDL_helper::LoadImageWithBMPFormat(getFullPath("image_1.bmp"), renderer);
+    background = SDL_helper::LoadImageWithBMPFormat(file_Helper::getFullPath("guest.bmp"), renderer);
+    image = SDL_helper::LoadImageWithBMPFormat(file_Helper::getFullPath("image_1.bmp"), renderer);
     if (background == nullptr || image == nullptr)
         return 4;
 

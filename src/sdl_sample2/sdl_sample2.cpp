@@ -39,8 +39,8 @@ int main(int argc, char** argv)
     SDL_Texture *background = nullptr, *image = nullptr;
     try
     {
-        background = SDL_helper::LoadImage(getFullPath("guest.bmp"), renderer);
-        image = SDL_helper::LoadImage(getFullPath("image_1.bmp"), renderer);
+        background = SDL_helper::LoadImage(file_Helper::getFullPath("guest.bmp"), renderer);
+        image = SDL_helper::LoadImage(file_Helper::getFullPath("image_1.bmp"), renderer);
     }
     catch (const std::runtime_error &e) {
         std::cout << e.what() << std::endl;

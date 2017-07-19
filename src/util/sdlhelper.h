@@ -9,6 +9,10 @@
 #include "SDL_image.h"
 #endif
 
+#ifdef SDL_ttf
+#include "SDL_ttf.h"
+#endif
+
 namespace SDL_helper
 {
 

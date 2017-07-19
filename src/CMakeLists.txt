@@ -13,4 +13,5 @@ endfunction(assign_source_group)
 
 add_subdirectory(sdl_sample1)
 add_subdirectory(sdl_sample2)
+add_subdirectory(sdl_sample3)
 add_subdirectory(simplest_player)
