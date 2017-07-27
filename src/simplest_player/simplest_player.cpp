@@ -46,7 +46,7 @@ int main(int argc, TCHAR * argv[])
     int				i, videoindex;
     AVCodecContext	*pCodecCtx;
     AVCodec			*pCodec;
-    std::string filepath = file_Helper::getFullPath("src01_480x272_22.h265");
+    std::string filepath = file_Helper::getVideoFullPath("src01_480x272_22.h265");
     av_register_all();
     avformat_network_init();
     pFormatCtx = avformat_alloc_context();
