@@ -33,7 +33,7 @@ ipch/
 GeneratedFiles/
 .moc/
 resource/video
-
+resource/audio
 /other/
 
 #make stuff

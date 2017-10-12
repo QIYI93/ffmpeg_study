@@ -30,5 +30,17 @@ namespace file_Helper
         fullPath.append(file);
         return fullPath;
     }
+
+    string getAudioFullPath(string file)
+    {
+        char path[MAX_PATH];
+        GetModuleFileName(NULL, path, MAX_PATH);
+        string fullPath(path);
+        size_t index = fullPath.find("ffmpeg_study");
+        fullPath.erase(fullPath.begin() + index + 13, fullPath.end());
+        fullPath.append("resource\\audio\\");
+        fullPath.append(file);
+        return fullPath;
+    }
 };
 #endif

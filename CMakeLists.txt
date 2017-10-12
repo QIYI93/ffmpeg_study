@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 2.8.12)
 project(ffmpeg-study)
 
 if(WIN32)
-	set(QTDIR "C:/Qt/Qt5.7.1/5.7/msvc2013")
+	set(QTDIR "D:/project/library/Qt/x86/Qt5.9.1/5.9.1/msvc2015")
 	set(SDL2 "D:/project/ffmpeg/deps/SDL2-2.0.5")
 	set(SDL2_image "D:/project/ffmpeg/deps/SDL2_image-2.0.1")
 	set(SDL2_mixer "D:/project/ffmpeg/deps/SDL2_mixer-2.0.1")
