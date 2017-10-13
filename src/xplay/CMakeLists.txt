@@ -23,6 +23,7 @@ set(CMAKE_AUTOMOC TRUE)
 
 find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Network REQUIRED)
+find_package(Qt5Multimedia REQUIRED)
 
 if(NOT Qt5Widgets_FOUND)
 	message(FATAL_ERROR "Failed to find Qt5")
@@ -34,8 +35,18 @@ if(NOT Qt5Network_FOUND)
 	return()
 endif()
 
+
+if(NOT Qt5Multimedia_FOUND)
+	message(FATAL_ERROR "Failed to find Qt5Multimedia")
+	return()
+endif()
+
+set(HEADERS
+xplay.h)
+
 set(SOURCES
-main.cpp)
+main.cpp
+xplay.cpp)
 
 include_directories(${FFMPEG}/include)
 
@@ -43,6 +54,7 @@ link_directories(${FFMPEG}/lib/x86)
 
 add_executable(xplay WIN32
 	${SOURCES}
+	${HEADERS}
 	${util})
 
 if(WIN32)
@@ -51,6 +63,7 @@ if(WIN32)
 		target_link_libraries(xplay
 		Qt5::Widgets
 		Qt5::Network
+		Qt5::Multimedia
 		avdevice.lib
 		avcodec.lib
 		avfilter.lib
@@ -70,9 +83,9 @@ endif()
 set(EXECUTABLE_OUTPUT_PATH "${CMAKE_BINARY_DIR}/rundir")
 assign_source_group(${util})
 
-if(MSVC)
-set_target_properties(xplay PROPERTIES LINK_FLAGS_DEBUG "/SUBSYSTEM:CONSOLE")
-endif()
+#if(MSVC)
+#set_target_properties(xplay PROPERTIES LINK_FLAGS_DEBUG "/SUBSYSTEM:CONSOLE")
+#endif()
 
 # Copy DLLs to the output directory on Windows
 if(WIN32)
@@ -83,4 +96,6 @@ add_custom_command(TARGET xplay POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_d
 add_custom_command(TARGET xplay POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different "${QTDIR}/bin/Qt5Cored.pdb" ${CMAKE_BINARY_DIR}/rundir/Debug)
 add_custom_command(TARGET xplay POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different "${QTDIR}/bin/Qt5Guid.dll" ${CMAKE_BINARY_DIR}/rundir/Debug)
 add_custom_command(TARGET xplay POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different "${QTDIR}/bin/Qt5Guid.pdb" ${CMAKE_BINARY_DIR}/rundir/Debug)
+add_custom_command(TARGET xplay POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different "${QTDIR}/bin/Qt5Multimediad.dll" ${CMAKE_BINARY_DIR}/rundir/Debug)
+add_custom_command(TARGET xplay POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different "${QTDIR}/bin/Qt5Multimediad.pdb" ${CMAKE_BINARY_DIR}/rundir/Debug)
 endif()
