@@ -20,6 +20,9 @@ static inline double r2d(AVRational r)
 int main(int argc, char *argv[])
 {
     XFFmpeg *xFFmpeg = XFFmpeg::get();
+    bool rrr = xFFmpeg->openFile(file_Helper::getVideoFullPath("Titanic.mkv").c_str());
+    AVPacket* pAVPkt = xFFmpeg->readFrame();
+
 
     char bufferErrMsg[4096] = { 0 };
     av_register_all();

@@ -16,15 +16,22 @@ class XFFmpeg
 
 public:
     static XFFmpeg* get();
-    ~XFFmpeg();
+    virtual ~XFFmpeg();
+
     bool openFile(const char*);
+    AVPacket* readFrame(); //Outside release
+    AVFrame* decoder(const AVPacket*);
     void closeFile();
     QString getError();
     int getTotalMS() { return m_totalMS; }
 
 protected:
     AVFormatContext *m_pFormatCtx = nullptr;
-    QMutex mutex;
+    QMutex m_mutex;
+    AVFrame *m_AVFrameYUV = nullptr;
+    int m_videoIndex = -1;
+    AVCodec *m_videoCodec = nullptr;
+    AVCodecContext *m_videoCodecCtx = nullptr;
 
 private:
     XFFmpeg();
