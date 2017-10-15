@@ -42,11 +42,13 @@ if(NOT Qt5Multimedia_FOUND)
 endif()
 
 set(HEADERS
-xplay.h)
+xplay.h
+xffmpeg.h)
 
 set(SOURCES
 main.cpp
-xplay.cpp)
+xplay.cpp
+xffmpeg.cpp)
 
 include_directories(${FFMPEG}/include)
 
