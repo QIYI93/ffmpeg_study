@@ -18,20 +18,23 @@ public:
     static XFFmpeg* get();
     virtual ~XFFmpeg();
 
-    bool openFile(const char*);
+    bool openFile(const char *filePath);
     AVPacket* readFrame(); //Outside release
-    AVFrame* decoder(const AVPacket*);
+    AVFrame* decoder(const AVPacket *pAVPkt);
+    bool YUVtoRGBA(const AVFrame *pAVFrameYUV, char *outData, int outWidth, int outHeight);
     void closeFile();
     QString getError();
+    int getVideoStream() { return m_videoIndex; }
     int getTotalMS() { return m_totalMS; }
 
 protected:
     AVFormatContext *m_pFormatCtx = nullptr;
     QMutex m_mutex;
-    AVFrame *m_AVFrameYUV = nullptr;
+    AVFrame *m_pAVFrameYUV = nullptr;
     int m_videoIndex = -1;
     AVCodec *m_videoCodec = nullptr;
     AVCodecContext *m_videoCodecCtx = nullptr;
+    SwsContext *m_pSwsCtx = nullptr;
 
 private:
     XFFmpeg();

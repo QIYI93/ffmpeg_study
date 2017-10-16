@@ -1,5 +1,5 @@
-project(xplay)
-message("xplay")
+project(xplayer)
+message("xplayer")
 
 set(util_DIR "${MAINSOURCE}/src/util")
 file (GLOB_RECURSE util
@@ -42,27 +42,42 @@ if(NOT Qt5Multimedia_FOUND)
 endif()
 
 set(HEADERS
-xplay.h
+xplayer.h
 xffmpeg.h)
 
 set(SOURCES
 main.cpp
-xplay.cpp
+xplayer.cpp
 xffmpeg.cpp)
+
+set(xplayer_QRC
+	forms/xplayer.qrc)
+
+set(xplayer_UI
+    forms/PlayerMainWidget.ui)
+	
+set(xplayer_PLATFORM_SOURCES
+	xplayer.rc)
+
+qt5_add_resources(xplayer_QRC_SOURCES ${xplayer_QRC})
+qt5_wrap_ui(xplayer_UI_HEADERS ${xplayer_UI})
 
 include_directories(${FFMPEG}/include)
 
 link_directories(${FFMPEG}/lib/x86)
 
-add_executable(xplay WIN32
+add_executable(xplayer WIN32
 	${SOURCES}
 	${HEADERS}
-	${util})
+	${util}
+	${xplayer_QRC_SOURCES}
+	${xplayer_UI}
+	${xplayer_PLATFORM_SOURCES})
 
 if(WIN32)
 	if(MSVC_VERSION EQUAL 1900)
 		message(STATUS "MSVC_VERSION EQUAL 1900")
-		target_link_libraries(xplay
+		target_link_libraries(xplayer
 		Qt5::Widgets
 		Qt5::Network
 		Qt5::Multimedia
@@ -86,18 +101,18 @@ set(EXECUTABLE_OUTPUT_PATH "${CMAKE_BINARY_DIR}/rundir")
 assign_source_group(${util})
 
 #if(MSVC)
-#set_target_properties(xplay PROPERTIES LINK_FLAGS_DEBUG "/SUBSYSTEM:CONSOLE")
+#set_target_properties(xplayer PROPERTIES LINK_FLAGS_DEBUG "/SUBSYSTEM:CONSOLE")
 #endif()
 
 # Copy DLLs to the output directory on Windows
 if(WIN32)
-add_custom_command(TARGET xplay POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory "${FFMPEG}/bin/x86" ${CMAKE_BINARY_DIR}/rundir/Debug)
-add_custom_command(TARGET xplay POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different "${QTDIR}/bin/Qt5Widgetsd.dll" ${CMAKE_BINARY_DIR}/rundir/Debug)
-add_custom_command(TARGET xplay POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different "${QTDIR}/bin/Qt5Widgetsd.pdb" ${CMAKE_BINARY_DIR}/rundir/Debug)
-add_custom_command(TARGET xplay POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different "${QTDIR}/bin/Qt5Cored.dll" ${CMAKE_BINARY_DIR}/rundir/Debug)
-add_custom_command(TARGET xplay POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different "${QTDIR}/bin/Qt5Cored.pdb" ${CMAKE_BINARY_DIR}/rundir/Debug)
-add_custom_command(TARGET xplay POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different "${QTDIR}/bin/Qt5Guid.dll" ${CMAKE_BINARY_DIR}/rundir/Debug)
-add_custom_command(TARGET xplay POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different "${QTDIR}/bin/Qt5Guid.pdb" ${CMAKE_BINARY_DIR}/rundir/Debug)
-add_custom_command(TARGET xplay POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different "${QTDIR}/bin/Qt5Multimediad.dll" ${CMAKE_BINARY_DIR}/rundir/Debug)
-add_custom_command(TARGET xplay POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different "${QTDIR}/bin/Qt5Multimediad.pdb" ${CMAKE_BINARY_DIR}/rundir/Debug)
+add_custom_command(TARGET xplayer POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory "${FFMPEG}/bin/x86" ${CMAKE_BINARY_DIR}/rundir/Debug)
+add_custom_command(TARGET xplayer POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different "${QTDIR}/bin/Qt5Widgetsd.dll" ${CMAKE_BINARY_DIR}/rundir/Debug)
+add_custom_command(TARGET xplayer POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different "${QTDIR}/bin/Qt5Widgetsd.pdb" ${CMAKE_BINARY_DIR}/rundir/Debug)
+add_custom_command(TARGET xplayer POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different "${QTDIR}/bin/Qt5Cored.dll" ${CMAKE_BINARY_DIR}/rundir/Debug)
+add_custom_command(TARGET xplayer POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different "${QTDIR}/bin/Qt5Cored.pdb" ${CMAKE_BINARY_DIR}/rundir/Debug)
+add_custom_command(TARGET xplayer POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different "${QTDIR}/bin/Qt5Guid.dll" ${CMAKE_BINARY_DIR}/rundir/Debug)
+add_custom_command(TARGET xplayer POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different "${QTDIR}/bin/Qt5Guid.pdb" ${CMAKE_BINARY_DIR}/rundir/Debug)
+add_custom_command(TARGET xplayer POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different "${QTDIR}/bin/Qt5Multimediad.dll" ${CMAKE_BINARY_DIR}/rundir/Debug)
+add_custom_command(TARGET xplayer POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different "${QTDIR}/bin/Qt5Multimediad.pdb" ${CMAKE_BINARY_DIR}/rundir/Debug)
 endif()

@@ -60,8 +60,14 @@ void XFFmpeg::closeFile()
     QMutexLocker locker(&m_mutex);
     if(m_pFormatCtx)
         avformat_close_input(&m_pFormatCtx);
-    if (m_AVFrameYUV)
-        av_frame_free(&m_AVFrameYUV);
+    if (m_pAVFrameYUV)
+        av_frame_free(&m_pAVFrameYUV);
+    if (m_pSwsCtx)
+    {
+        sws_freeContext(m_pSwsCtx);
+        m_pSwsCtx = nullptr;
+    }
+
 }
 
 QString XFFmpeg::getError()
@@ -88,18 +94,39 @@ AVFrame* XFFmpeg::decoder(const AVPacket* pAVPkt)
     QMutexLocker locker(&m_mutex);
     if (!m_pFormatCtx)
         return nullptr;
-    if (m_AVFrameYUV == nullptr)
-        m_AVFrameYUV = av_frame_alloc();
     if (pAVPkt->stream_index == m_videoIndex)
     {
+        if (m_pAVFrameYUV == nullptr)
+            m_pAVFrameYUV = av_frame_alloc();
         if (0 != avcodec_send_packet(m_videoCodecCtx, pAVPkt))
             return nullptr;
-        if (0 != avcodec_receive_frame(m_videoCodecCtx, m_AVFrameYUV))
+        if (0 != avcodec_receive_frame(m_videoCodecCtx, m_pAVFrameYUV))
             return nullptr;
     }
 
-    return m_AVFrameYUV;
+    return m_pAVFrameYUV;
+}
 
+bool XFFmpeg::YUVtoRGBA(const AVFrame *pAVFrameYUV, char *outData, int outWidth, int outHeight)
+{
+    m_pSwsCtx = sws_getCachedContext(m_pSwsCtx,
+        m_videoCodecCtx->width, m_videoCodecCtx->height,
+        m_videoCodecCtx->pix_fmt,
+        outWidth, outHeight,
+        AV_PIX_FMT_BGRA,
+        SWS_BICUBIC,
+        nullptr, nullptr, nullptr);
+    if (!m_pSwsCtx)
+    {
+        strcpy(m_errMsgBuffer, "sws_getCachedContext failed.");
+        return false;
+    }
+    uint8_t *data[AV_NUM_DATA_POINTERS] = { 0 };
+    data[0] = reinterpret_cast<uint8_t *>(outData);
+    int lineSize[AV_NUM_DATA_POINTERS] = { 0 };
+    lineSize[0] = outWidth * 4;
+    int height = sws_scale(m_pSwsCtx, pAVFrameYUV->data, pAVFrameYUV->linesize, 0, m_videoCodecCtx->height, data, lineSize);
+    return true;
 }
 
 XFFmpeg::~XFFmpeg()
