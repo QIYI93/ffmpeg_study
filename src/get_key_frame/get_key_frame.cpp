@@ -1,5 +1,5 @@
 #include <iostream>
-
+#include <windows.h>
 extern "C"
 {
 #include <libavcodec/avcodec.h>

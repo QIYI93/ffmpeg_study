@@ -1,12 +1,14 @@
 <RCC>
   <qresource prefix="/res">
- 	<file>images/mute.png</file>
-	<file>images/next.png</file>
+ 	<file>images/sound_off.png</file>
+	<file>images/sound_mid.png</file>
+	<file>images/sound_on.png</file>
+	<file>images/sound_low.png</file>
+	<file>images/settings.png</file>
 	<file>images/openfile.png</file>
 	<file>images/pause.png</file>
 	<file>images/play.png</file>
-	<file>images/previous.png</file>
-	<file>images/sound.png</file>
+
 	<file>images/XPlayer.ico</file>
   </qresource>
 </RCC>

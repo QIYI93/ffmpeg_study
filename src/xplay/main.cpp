@@ -12,11 +12,6 @@ extern "C"
 #include "xffmpeg.h"
 #include "xplayer.h"
 
-static inline double r2d(AVRational r)
-{
-    return r.num == 0 || r.den == 0 ? 0 : (double)r.num / (double)r.den;
-}
-
 int main(int argc, char *argv[])
 {
     //XFFmpeg *xFFmpeg = XFFmpeg::get();

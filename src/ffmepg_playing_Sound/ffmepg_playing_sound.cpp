@@ -206,7 +206,7 @@ int main(int argc, char *argv[]) {
     SDL_AudioSpec   wanted_spec, spec;
 
 
-    std::string filePath = file_Helper::getAudioFullPath("陈一发儿 - 童话镇.mp3");
+    const char *filePath = file_Helper::getAudioFullPath("陈一发儿 - 童话镇.mp3").c_str();
 
     av_register_all();
 
@@ -215,7 +215,7 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
 
-    if (avformat_open_input(&pFormatCtx, filePath.c_str(), NULL, NULL) != 0)
+    if (avformat_open_input(&pFormatCtx, filePath, NULL, NULL) != 0)
         return -1;
 
     if (avformat_find_stream_info(pFormatCtx, NULL) < 0)

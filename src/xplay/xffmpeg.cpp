@@ -2,6 +2,11 @@
 
 XFFmpeg* XFFmpeg::s_xFFMpeg = new XFFmpeg();
 
+static inline double r2d(AVRational r)
+{
+    return r.num == 0 || r.den == 0 ? 0 : (double)r.num / (double)r.den;
+}
+
 XFFmpeg::XFFmpeg()
 {
     av_register_all();
@@ -30,7 +35,10 @@ bool XFFmpeg::openFile(const char* filePath)
     for (int i = 0; i < m_pFormatCtx->nb_streams; i++)
     {
         if (m_pFormatCtx->streams[i]->codecpar->codec_type == AVMEDIA_TYPE_VIDEO)
+        {
             m_videoIndex = i;
+            m_fps = r2d(m_pFormatCtx->streams[i]->avg_frame_rate);
+        }
     }
     if (m_videoIndex == -1)
     {
@@ -107,8 +115,12 @@ AVFrame* XFFmpeg::decoder(const AVPacket* pAVPkt)
     return m_pAVFrameYUV;
 }
 
-bool XFFmpeg::YUVtoRGBA(const AVFrame *pAVFrameYUV, char *outData, int outWidth, int outHeight)
+bool XFFmpeg::YUVtoRGBA(char *outData, int outWidth, int outHeight)
 {
+    QMutexLocker locker(&m_mutex);
+    if (!m_pFormatCtx || !m_pAVFrameYUV)
+        return false;
+
     m_pSwsCtx = sws_getCachedContext(m_pSwsCtx,
         m_videoCodecCtx->width, m_videoCodecCtx->height,
         m_videoCodecCtx->pix_fmt,
@@ -125,7 +137,7 @@ bool XFFmpeg::YUVtoRGBA(const AVFrame *pAVFrameYUV, char *outData, int outWidth,
     data[0] = reinterpret_cast<uint8_t *>(outData);
     int lineSize[AV_NUM_DATA_POINTERS] = { 0 };
     lineSize[0] = outWidth * 4;
-    int height = sws_scale(m_pSwsCtx, pAVFrameYUV->data, pAVFrameYUV->linesize, 0, m_videoCodecCtx->height, data, lineSize);
+    int height = sws_scale(m_pSwsCtx, m_pAVFrameYUV->data, m_pAVFrameYUV->linesize, 0, m_videoCodecCtx->height, data, lineSize);
     return true;
 }
 

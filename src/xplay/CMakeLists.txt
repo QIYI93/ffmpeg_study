@@ -43,12 +43,16 @@ endif()
 
 set(HEADERS
 xplayer.h
-xffmpeg.h)
+xffmpeg.h
+xplayerscreenwidget.h
+videothread.h)
 
 set(SOURCES
 main.cpp
 xplayer.cpp
-xffmpeg.cpp)
+xffmpeg.cpp
+xplayerscreenwidget.cpp
+videothread.cpp)
 
 set(xplayer_QRC
 	forms/xplayer.qrc)
