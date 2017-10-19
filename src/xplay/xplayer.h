@@ -24,6 +24,11 @@ private slots:
     void openFile();
     void videoStart();
     void updateTimeLabel();
+    void updateTimeProgressSlider();
+    void slotSilderPressed();
+    void slotSilderReleased();
+    void slotSilderMoved(int value);
+    void slotPlayButtonClicked();
 
 private:
     Ui::PlayerMainWidget *m_ui;
@@ -31,8 +36,10 @@ private:
     QTimer *m_timer = nullptr;
     QString m_fileName;
     QString m_title;
-    int m_elapseTime = 0;
-    int m_totalTime = 0;
+    int timerInterval = 20;
+    int m_elapseTime = 0;  //ms
+    int m_totalTime = 0;   //ms
+    bool m_isPlaying = false;
 
 };
 

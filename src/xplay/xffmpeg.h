@@ -26,7 +26,11 @@ public:
     QString getError();
     int getVideoStream() { return m_videoIndex; }
     int getTotalMS() { return m_totalMS; }
+    int getVideoelapseTime() { return m_videoElapseTime; } //return elapse time(ms)
     double getFps() { return m_fps; }
+    bool seek(int ms);
+    bool getIsPlay() { return m_isplay; }
+    void setIsplay(bool isPlay) { m_isplay = isPlay; }
 
 protected:
     AVFormatContext *m_pFormatCtx = nullptr;
@@ -44,6 +48,8 @@ private:
     char m_errMsgBuffer[2048];
     int m_totalMS = 0;
     double m_fps = 0;
+    int m_videoElapseTime = 0;
+    bool m_isplay = false;
 };
 
 

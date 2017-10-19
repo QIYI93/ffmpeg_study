@@ -1,4 +1,5 @@
 #include "xffmpeg.h"
+#include <QDebug>
 
 XFFmpeg* XFFmpeg::s_xFFMpeg = new XFFmpeg();
 
@@ -111,7 +112,7 @@ AVFrame* XFFmpeg::decoder(const AVPacket* pAVPkt)
         if (0 != avcodec_receive_frame(m_videoCodecCtx, m_pAVFrameYUV))
             return nullptr;
     }
-
+    m_videoElapseTime = m_pAVFrameYUV->pts * r2d(m_pFormatCtx->streams[pAVPkt->stream_index]->time_base) * 1000;
     return m_pAVFrameYUV;
 }
 
@@ -139,6 +140,47 @@ bool XFFmpeg::YUVtoRGBA(char *outData, int outWidth, int outHeight)
     lineSize[0] = outWidth * 4;
     int height = sws_scale(m_pSwsCtx, m_pAVFrameYUV->data, m_pAVFrameYUV->linesize, 0, m_videoCodecCtx->height, data, lineSize);
     return true;
+}
+
+bool XFFmpeg::seek(int ms)
+{
+    int ret = -1;
+    auto getPresentFrame = [this]()->void
+    {
+        XFFmpeg *xFFmpeg = XFFmpeg::get();
+        AVPacket *pPkt = nullptr;
+        while (true)
+        {
+            pPkt = xFFmpeg->readFrame();
+            if (pPkt->size <= 0)
+                continue;
+            if (pPkt->stream_index != xFFmpeg->getVideoStream())
+            {
+                av_packet_unref(pPkt);
+                continue;
+            }
+            xFFmpeg->decoder(pPkt);
+            av_packet_unref(pPkt);
+            break;
+        }
+    };
+
+    {
+        QMutexLocker locker(&m_mutex);
+        if (!m_pFormatCtx)
+            return false;
+        int64_t timeStamp = (double)ms / r2d(m_pFormatCtx->streams[m_videoIndex]->time_base) / (double)1000;
+        ret = av_seek_frame(m_pFormatCtx, m_videoIndex, timeStamp, AVSEEK_FLAG_BACKWARD | AVSEEK_FLAG_FRAME);
+        avcodec_flush_buffers(m_videoCodecCtx);  //Flush video codec buffers
+    }
+    if (ret >= 0)
+    {
+        if(!m_isplay)
+            getPresentFrame();
+        return true;
+    }
+    else
+        return false;
 }
 
 XFFmpeg::~XFFmpeg()

@@ -8,6 +8,7 @@
 	<file>images/openfile.png</file>
 	<file>images/pause.png</file>
 	<file>images/play.png</file>
+	<file>images/slider_handle.png</file>
 
 	<file>images/XPlayer.ico</file>
   </qresource>

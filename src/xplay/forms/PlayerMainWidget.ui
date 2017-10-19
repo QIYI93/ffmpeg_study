@@ -101,6 +101,44 @@
     <string>00:00:00/00:00:00</string>
    </property>
   </widget>
+  <widget class="QSlider" name="playProgressSlider">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>340</y>
+     <width>560</width>
+     <height>14</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QSlider::add-page:Horizontal{
+background-color: rgb(87, 97, 106);
+height:3px;}
+QSlider::sub-page:Horizontal {
+background-color:rgb(40, 115, 216);
+height:3px;}
+QSlider::groove:Horizontal{
+background:transparent;
+height:3px;}
+QSlider::handle:Horizontal{
+height: 12px;
+width:12px;  
+border-image: url(:/res/images/slider_handle.png);
+margin: -4 -2px;  }</string>
+   </property>
+   <property name="maximum">
+    <number>9999</number>
+   </property>
+   <property name="singleStep">
+    <number>3</number>
+   </property>
+   <property name="pageStep">
+    <number>100</number>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
  </widget>
  <customwidgets>
   <customwidget>

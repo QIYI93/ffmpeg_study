@@ -20,6 +20,11 @@ void VideoThread::run()
     XFFmpeg *xFFmpeg = XFFmpeg::get();
     while (!isExit)
     {
+        if (!xFFmpeg->getIsPlay())
+        {
+            msleep(10);
+            continue;
+        }
         AVPacket *pPkt = xFFmpeg->readFrame();
         if (pPkt->size <= 0)
         {
