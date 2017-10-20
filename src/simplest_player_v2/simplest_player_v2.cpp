@@ -66,7 +66,6 @@ int main(int argc, char * argv[])
     av_register_all();
     avformat_network_init();
     pFormatCtx = avformat_alloc_context();
-
     if (avformat_open_input(&pFormatCtx, filePath.c_str(), nullptr, nullptr) != 0) { std::cout << "Couldn't open input stream" << std::endl; return 1; }
     if (avformat_find_stream_info(pFormatCtx, nullptr) < 0) {std::cout << "Couldn't find stream information" << std::endl; return 1; }
     videoIndex = -1;

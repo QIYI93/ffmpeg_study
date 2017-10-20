@@ -1,25 +1,25 @@
-#include "xffmpeg.h"
+#include "qffmpeg.h"
 #include <QDebug>
 
-XFFmpeg* XFFmpeg::s_xFFMpeg = new XFFmpeg();
+QFFmpeg* QFFmpeg::s_qFFmpeg = new QFFmpeg();
 
 static inline double r2d(AVRational r)
 {
     return r.num == 0 || r.den == 0 ? 0 : (double)r.num / (double)r.den;
 }
 
-XFFmpeg::XFFmpeg()
+QFFmpeg::QFFmpeg()
 {
     av_register_all();
     m_errMsgBuffer[0] = '\0';
 }
 
-XFFmpeg* XFFmpeg::get()
+QFFmpeg* QFFmpeg::get()
 {
-    return s_xFFMpeg;
+    return s_qFFmpeg;
 }
 
-bool XFFmpeg::openFile(const char* filePath)
+bool QFFmpeg::openFile(const char* filePath)
 {
     closeFile();
 
@@ -64,7 +64,7 @@ bool XFFmpeg::openFile(const char* filePath)
     return true;
 }
 
-void XFFmpeg::closeFile()
+void QFFmpeg::closeFile()
 {
     QMutexLocker locker(&m_mutex);
     if(m_pFormatCtx)
@@ -79,13 +79,13 @@ void XFFmpeg::closeFile()
 
 }
 
-QString XFFmpeg::getError()
+QString QFFmpeg::getError()
 {
     QMutexLocker locker(&m_mutex);
     return QString(m_errMsgBuffer);
 }
 
-AVPacket* XFFmpeg::readFrame()
+AVPacket* QFFmpeg::readFrame()
 {
     AVPacket *pAVPacket = (AVPacket*)av_malloc(sizeof(AVPacket));
     memset(pAVPacket, 0, sizeof(AVPacket));
@@ -98,7 +98,7 @@ AVPacket* XFFmpeg::readFrame()
     return pAVPacket;
 }
 
-AVFrame* XFFmpeg::decoder(const AVPacket* pAVPkt)
+AVFrame* QFFmpeg::decoder(const AVPacket* pAVPkt)
 {
     QMutexLocker locker(&m_mutex);
     if (!m_pFormatCtx)
@@ -116,7 +116,7 @@ AVFrame* XFFmpeg::decoder(const AVPacket* pAVPkt)
     return m_pAVFrameYUV;
 }
 
-bool XFFmpeg::YUVtoRGBA(char *outData, int outWidth, int outHeight)
+bool QFFmpeg::YUVtoRGBA(char *outData, int outWidth, int outHeight)
 {
     QMutexLocker locker(&m_mutex);
     if (!m_pFormatCtx || !m_pAVFrameYUV)
@@ -142,24 +142,24 @@ bool XFFmpeg::YUVtoRGBA(char *outData, int outWidth, int outHeight)
     return true;
 }
 
-bool XFFmpeg::seek(int ms)
+bool QFFmpeg::seek(int ms)
 {
     int ret = -1;
     auto getPresentFrame = [this]()->void
     {
-        XFFmpeg *xFFmpeg = XFFmpeg::get();
+        QFFmpeg *qFFmpeg = QFFmpeg::get();
         AVPacket *pPkt = nullptr;
         while (true)
         {
-            pPkt = xFFmpeg->readFrame();
+            pPkt = qFFmpeg->readFrame();
             if (pPkt->size <= 0)
                 continue;
-            if (pPkt->stream_index != xFFmpeg->getVideoStream())
+            if (pPkt->stream_index != qFFmpeg->getVideoStream())
             {
                 av_packet_unref(pPkt);
                 continue;
             }
-            xFFmpeg->decoder(pPkt);
+            qFFmpeg->decoder(pPkt);
             av_packet_unref(pPkt);
             break;
         }
@@ -183,7 +183,7 @@ bool XFFmpeg::seek(int ms)
         return false;
 }
 
-XFFmpeg::~XFFmpeg()
+QFFmpeg::~QFFmpeg()
 {
 
 }

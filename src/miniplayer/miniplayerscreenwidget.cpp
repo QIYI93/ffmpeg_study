@@ -1,25 +1,36 @@
-#include "xplayerscreenwidget.h"
+#include "miniplayerscreenwidget.h"
 #include <QPainter>
 #include <QImage>
 #include <QPoint>
 
 #include "filehelper.h"
-#include "xffmpeg.h"
+#include "qffmpeg.h"
 
-XPlayerScreenWidget::XPlayerScreenWidget(QWidget *parent)
+MiniPlayerScreenWidget::MiniPlayerScreenWidget(QWidget *parent)
     :QOpenGLWidget(parent)
 {
     startTimer(20);
 }
 
-XPlayerScreenWidget::~XPlayerScreenWidget()
+MiniPlayerScreenWidget::~MiniPlayerScreenWidget()
 {
 
 }
 
-void XPlayerScreenWidget::paintEvent(QPaintEvent *e)
+void MiniPlayerScreenWidget::paintEvent(QPaintEvent *e)
 {
     static QImage *img = nullptr;
+    static int h = 0;
+    static int w = 0;
+    if (w != width() && h != height())
+    {
+        if (img)
+        {
+            delete img->bits();
+            delete img;
+            img = nullptr;
+        }
+    }
     if (img == nullptr)
     {
         uchar *buffer = (uchar*)malloc(width() * height() * 4 * sizeof(uchar));
@@ -27,8 +38,8 @@ void XPlayerScreenWidget::paintEvent(QPaintEvent *e)
     }
     if (m_isDilplayMode)
     {
-        XFFmpeg *xFFmpeg = XFFmpeg::get();
-        xFFmpeg->YUVtoRGBA((char*)img->bits(), width(), height());
+        QFFmpeg *qFFmpeg = QFFmpeg::get();
+        qFFmpeg->YUVtoRGBA((char*)img->bits(), width(), height());
 
         QPainter painter;
         painter.begin(this);
@@ -41,7 +52,7 @@ void XPlayerScreenWidget::paintEvent(QPaintEvent *e)
     }
 }
 
-void XPlayerScreenWidget::timerEvent(QTimerEvent *e)
+void MiniPlayerScreenWidget::timerEvent(QTimerEvent *e)
 {
     this->update();
 }

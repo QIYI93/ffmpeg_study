@@ -1,5 +1,5 @@
-#ifndef XPLAY_H
-#define XPLAY_H
+#ifndef MINIPLAYER_H
+#define MINIPLAYER_H
 
 #include <QDialog>
 #include <QString>
@@ -8,17 +8,17 @@ namespace Ui {
     class PlayerMainWidget;
 }
 
-class XFFmpeg;
+class QFFmpeg;
 class QTimer;
 
-class XPlayDialog : public QDialog
+class MiniPlayerDialog : public QDialog
 {
     Q_OBJECT
 
 
 public:
-    explicit XPlayDialog(QWidget *parent = nullptr);
-    ~XPlayDialog();
+    explicit MiniPlayerDialog(QWidget *parent = nullptr);
+    ~MiniPlayerDialog();
 
 private slots:
     void openFile();
@@ -30,9 +30,14 @@ private slots:
     void slotSilderMoved(int value);
     void slotPlayButtonClicked();
 
+protected:
+    void resizeEvent(QResizeEvent *) override;
+    bool eventFilter(QObject *, QEvent *) override;
+
+
 private:
     Ui::PlayerMainWidget *m_ui;
-    XFFmpeg *m_xFFmpeg = nullptr;
+    QFFmpeg *m_qFFmpeg = nullptr;
     QTimer *m_timer = nullptr;
     QString m_fileName;
     QString m_title;
@@ -55,4 +60,4 @@ private:
 
 
 
-#endif // !XPLAY_H
+#endif // !MiniPlayer_H

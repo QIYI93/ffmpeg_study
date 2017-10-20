@@ -1,15 +1,15 @@
-#ifndef XPLAYERSCREENWIDGET_H
-#define XPLAYERSCREENWIDGET_H
+#ifndef MINIPLAYERSCREENWIDGET_H
+#define MINIPLAYERSCREENWIDGET_H
 
 #include <QOpenGLWidget>
 
-class XPlayerScreenWidget : public QOpenGLWidget
+class MiniPlayerScreenWidget : public QOpenGLWidget
 {
     Q_OBJECT
 
 public:
-    explicit XPlayerScreenWidget(QWidget *parent = nullptr);
-    virtual ~XPlayerScreenWidget() override;
+    explicit MiniPlayerScreenWidget(QWidget *parent = nullptr);
+    virtual ~MiniPlayerScreenWidget() override;
     virtual void paintEvent(QPaintEvent *e) override;
     virtual void timerEvent(QTimerEvent *e) override;
 

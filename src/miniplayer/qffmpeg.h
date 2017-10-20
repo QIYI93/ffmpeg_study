@@ -1,5 +1,5 @@
-#ifndef XFFMPEG_H
-#define XFFMPEG_H
+#ifndef QFFMPEG_H
+#define QFFMPEG_H
 
 #include <QString>
 #include <QMutex>
@@ -11,12 +11,12 @@ extern "C"
 #include <libswscale/swscale.h>
 }
 
-class XFFmpeg
+class QFFmpeg
 {
 
 public:
-    static XFFmpeg* get();
-    virtual ~XFFmpeg();
+    static QFFmpeg* get();
+    virtual ~QFFmpeg();
 
     bool openFile(const char *filePath);
     AVPacket* readFrame(); //Outside release
@@ -42,9 +42,9 @@ protected:
     SwsContext *m_pSwsCtx = nullptr;
 
 private:
-    XFFmpeg();
+    QFFmpeg();
 
-    static XFFmpeg *s_xFFMpeg;
+    static QFFmpeg *s_qFFmpeg;
     char m_errMsgBuffer[2048];
     int m_totalMS = 0;
     double m_fps = 0;

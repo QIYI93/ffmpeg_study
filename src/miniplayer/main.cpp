@@ -9,13 +9,13 @@ extern "C"
 }
 
 #include <filehelper.h>
-#include "xffmpeg.h"
-#include "xplayer.h"
+#include "qffmpeg.h"
+#include "miniplayer.h"
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    XPlayDialog playDlg;
-    playDlg.show();
+    MiniPlayerDialog playerDlg;
+    playerDlg.show();
     return a.exec();
 }

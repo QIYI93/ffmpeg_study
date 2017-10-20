@@ -1,5 +1,5 @@
 #include "videothread.h"
-#include "xffmpeg.h"
+#include "qffmpeg.h"
 
 VideoThread *VideoThread::s_videoThread = new VideoThread();
 bool isExit = false;
@@ -17,29 +17,29 @@ VideoThread::VideoThread(QObject *parent)
 
 void VideoThread::run()
 {
-    XFFmpeg *xFFmpeg = XFFmpeg::get();
+    QFFmpeg *qFFmpeg = QFFmpeg::get();
     while (!isExit)
     {
-        if (!xFFmpeg->getIsPlay())
+        if (!qFFmpeg->getIsPlay())
         {
             msleep(10);
             continue;
         }
-        AVPacket *pPkt = xFFmpeg->readFrame();
+        AVPacket *pPkt = qFFmpeg->readFrame();
         if (pPkt->size <= 0)
         {
             msleep(10);
             continue;
         }
-        if (pPkt->stream_index != xFFmpeg->getVideoStream())
+        if (pPkt->stream_index != qFFmpeg->getVideoStream())
         {
             av_packet_unref(pPkt);
             continue;
         }
-        AVFrame *avFrameYUV = xFFmpeg->decoder(pPkt);
+        AVFrame *avFrameYUV = qFFmpeg->decoder(pPkt);
         av_packet_unref(pPkt);
-        if (xFFmpeg->getFps() > 0)
-            msleep(1000 / xFFmpeg->getFps());
+        if (qFFmpeg->getFps() > 0)
+            msleep(1000 / qFFmpeg->getFps());
     }
 }
 
