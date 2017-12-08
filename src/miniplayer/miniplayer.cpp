@@ -47,9 +47,10 @@ MiniPlayerDialog::MiniPlayerDialog(QWidget *parent)
 
 void MiniPlayerDialog::openFile()
 {
-    m_fileName = QFileDialog::getOpenFileName(this, "Choose video file", NULL, "*.mp4 *.ts *.mov *.flv *.mkv *.avi *.gif *.webm");
+    //m_fileName = QFileDialog::getOpenFileName(this, "Choose video file", NULL, "*.mp4 *.ts *.mov *.flv *.mkv *.avi *.gif *.webm");
+    m_fileName = "D:\\project\\ffmpeg\\media_data\\video\\sintel.wmv";
     if (m_fileName.isEmpty())
-        return;
+        return; 
     bool ret = m_qFFmpeg->openFile(m_fileName.toLocal8Bit().data());
     if (!ret)
     {

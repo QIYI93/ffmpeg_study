@@ -1,7 +1,6 @@
 #include <windows.h>
 #include <QApplication>
 #include <QDebug>
-
 extern "C"
 {
 #include <libavformat/avformat.h>
